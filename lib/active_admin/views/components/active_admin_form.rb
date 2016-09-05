@@ -19,7 +19,7 @@ module ActiveAdmin
         opening_tag << children.to_s << closing_tag
       end
     end
-    
+
     class ActiveAdminForm < FormtasticProxy
       builder_method :active_admin_form_for
 
@@ -58,6 +58,18 @@ module ActiveAdmin
           insert_tag(SemanticInputsProxy, form_builder, *args, &wrapped_block)
         else
           proxy_call_to_form(:inputs, *args, &block)
+        end
+      end
+
+      def multiple_inputs(*attributes)
+        options = attributes.extract_options!
+
+        attributes.each do |attributes|
+          attributes = {attributes => {}} unless attributes.is_a?(Hash)
+
+          attributes.each do |attribute, attribute_options|
+            input(attribute, options.merge(attribute_options))
+          end
         end
       end
 
